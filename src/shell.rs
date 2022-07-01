@@ -43,7 +43,7 @@ impl Shell {
     }
 
     fn display_prompt(&self) {
-        print!("{} ", self.style.paint(self.prompt.to_string()));
+        print!("{} ", self.style.paint(self.prompt.clone()));
         std::io::stdout().flush().unwrap();
     }
 
