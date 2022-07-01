@@ -1,0 +1,13 @@
+root = true
+
+[*]
+insert_final_newline = true
+charset = utf-8
+indent_size = 4
+indent_style = space
+# Optional: git will commit as lf, this will only affect local files
+end_of_line = lf
+
+[*.toml]
+indent_style = space
+indent_size = 2
