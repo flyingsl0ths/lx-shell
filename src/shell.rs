@@ -56,28 +56,26 @@ impl Shell {
     }
 
     fn launch_cmd(&mut self, input: String) {
-        let mut fragments = input.trim().split_whitespace();
+        let mut args = input.trim().split_whitespace();
 
-        let command = fragments.next().unwrap();
+        let command = args.next().unwrap();
 
-        if Shell::exit_or_launch(command, fragments) {
+        if Shell::exit_or_launch(command, args) {
             self.quit = true;
             return;
         }
     }
 
-    fn exit_or_launch(command: &str, fragments: std::str::SplitWhitespace) -> bool {
+    fn exit_or_launch(command: &str, args: std::str::SplitWhitespace) -> bool {
         if command == "exit" {
             return true;
         }
 
-        Shell::launch(command, fragments);
+        Shell::launch(command, args);
         false
     }
 
-    fn launch(command: &str, fragments: std::str::SplitWhitespace) {
-        let args = fragments;
-
+    fn launch(command: &str, args: std::str::SplitWhitespace) {
         match std::process::Command::new(command).args(args).spawn() {
             Ok(mut child) => {
                 child.wait().unwrap();
