@@ -42,9 +42,12 @@ impl Shell {
         let home_dir = std::env::var("HOME").unwrap_or_default();
 
         if !home_dir.is_empty() {
-            std::env::set_current_dir(&std::path::Path::new(&home_dir)).unwrap_or_default();
+            std::env::set_current_dir(&std::path::Path::new(&home_dir))
+                .unwrap_or_else(|e| {
+                    Shell::warn_msg("Unable to set intial cwd", &e.to_string())
+                });
         } else {
-            Shell::error_msg(
+            Shell::warn_msg(
                 "HOME environment variable not set",
                 "unable to set initial cwd",
             );
@@ -97,5 +100,17 @@ impl Shell {
                 .bold()
                 .paint(format!("{}: {}: {}", "lx", prefix, message))
         )
+    }
+
+    fn warn_msg(prefix: &str, message: &str) {
+        let warning_style = ansi_term::Style::new()
+            .bold()
+            .on(ansi_term::Color::Yellow)
+            .fg(ansi_term::Color::Black);
+
+        eprintln!(
+            "{}",
+            warning_style.paint(format!("{}: {}: {}", "lx", prefix, message))
+        );
     }
 }
