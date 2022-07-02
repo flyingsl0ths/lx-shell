@@ -19,6 +19,8 @@ impl Default for Shell {
 
 impl Shell {
     pub fn run(&mut self) {
+        Shell::set_init_cwd();
+
         loop {
             self.display_prompt();
 
@@ -33,6 +35,19 @@ impl Shell {
             }
 
             self.launch_cmd(line);
+        }
+    }
+
+    fn set_init_cwd() {
+        let home_dir = std::env::var("HOME").unwrap_or_default();
+
+        if !home_dir.is_empty() {
+            std::env::set_current_dir(&std::path::Path::new(&home_dir)).unwrap_or_default();
+        } else {
+            Shell::error_msg(
+                "HOME environment variable not set",
+                "unable to set initial cwd",
+            );
         }
     }
 
