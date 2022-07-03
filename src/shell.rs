@@ -18,7 +18,7 @@ impl Default for Shell {
 }
 
 impl Shell {
-    pub fn run(&mut self) {
+    pub fn run(&self) {
         Shell::set_init_cwd();
 
         loop {
@@ -34,7 +34,7 @@ impl Shell {
                 break;
             }
 
-            self.launch_cmd(line);
+            Shell::launch_cmd(line);
         }
     }
 
@@ -67,7 +67,7 @@ impl Shell {
         (input == "\n", input.trim().to_string())
     }
 
-    fn launch_cmd(&mut self, input: String) {
+    fn launch_cmd(input: String) {
         let mut args = input.split_whitespace();
 
         let command = args.next().unwrap();
