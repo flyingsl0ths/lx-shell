@@ -1,0 +1,21 @@
+name: CI
+on:
+    push:
+        tags-ignore: v*.*
+        branches:
+            - '*'
+            - '*/*'
+    pull_request:
+        branches:
+            - '*'
+jobs:
+    run-tests:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Init
+              run: sudo apt update && sudo apt upgrade
+            - name: Build
+              run: cargo build
+            - name: Test
+              run: cargo test
