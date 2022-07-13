@@ -2,6 +2,8 @@
 name = "lx"
 version = "0.1.0"
 edition = "2021"
+license = "GPL-3.0-only"
+repository = "https://github.com/flyingsl0ths/lx-shell"
 
 [dependencies]
 ansi_term = "0.12.1"
