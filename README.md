@@ -1,5 +1,5 @@
 # lx-shell
 
-![example workflow](https://github.com/flyingsl0ths/lx-shell/actions/workflows/ci.yml/badge.svg)
+![Build Status](https://github.com/flyingsl0ths/lx-shell/actions/workflows/ci.yaml/badge.svg)
 
 A minimal linux shell
