@@ -1,11 +1,10 @@
 mod built_ins;
 
 use built_ins::cd;
-use std::{env, env::VarError, io, io::Write, path, process::Child};
+use std::{env, io, io::Write, path, process::Child};
 
 const SHELL_NAME: &str = "lx";
 
-type EnvVar = Result<String, VarError>;
 type ReadLineResult = (bool, String);
 type CommandArgs<'a> = std::str::SplitWhitespace<'a>;
 
@@ -27,7 +26,9 @@ impl Default for Shell {
 
 impl Shell {
     pub fn run(&mut self) {
-        self.home_dir = set_init_cwd(env::var("HOME"));
+        self.home_dir = env::var("HOME").map_or_else(|_| None, Some);
+
+        set_home_dir(&self.home_dir);
 
         loop {
             self.display_prompt();
@@ -59,7 +60,7 @@ impl Shell {
         if cmd == "exit" {
             exit = true;
         } else if cmd == "cd" {
-            self.change_directory(args.collect::<String>());
+            self.change_directory(args.collect());
         } else {
             launch_process(cmd, args);
         }
@@ -77,10 +78,8 @@ impl Shell {
     }
 }
 
-fn set_init_cwd(home: EnvVar) -> Option<String> {
-    let home_dir = home.map_or_else(|_| None, Some);
-
-    if let Some(ref home_dir) = home_dir {
+fn set_home_dir(home_dir: &Option<String>) {
+    if let Some(home_dir) = home_dir {
         env::set_current_dir(&path::Path::new(home_dir)).unwrap_or_else(|e| {
             warn_msg("Unable to set intial cwd", &e.to_string())
         })
@@ -90,8 +89,6 @@ fn set_init_cwd(home: EnvVar) -> Option<String> {
             "unable to set initial cwd",
         )
     }
-
-    home_dir
 }
 
 fn read_line() -> ReadLineResult {

@@ -16,7 +16,7 @@ pub mod cd {
         Some(if path.len() == 1usize {
             home_dir
         } else {
-            home_dir + &chars.collect::<String>()
+            home_dir + &chars.as_str()
         })
     }
 
@@ -24,16 +24,12 @@ pub mod cd {
         home_dir: &Option<String>,
         path: Option<String>,
     ) -> Result<(), std::io::Error> {
-        let on_no_path_given = || {
-            if home_dir.is_some() {
-                let home_dir = &home_dir.as_ref().unwrap();
-                env::set_current_dir(path::Path::new(home_dir))
-            } else {
-                Err(std::io::Error::new(
-                    std::io::ErrorKind::NotFound,
-                    "Home directory not found",
-                ))
-            }
+        let on_no_path_given = || match home_dir.as_ref() {
+            Some(home_dir) => env::set_current_dir(path::Path::new(home_dir)),
+            None => Err(std::io::Error::new(
+                std::io::ErrorKind::NotFound,
+                "Home directory not found",
+            )),
         };
 
         let on_path_given = |mut path: String| {
@@ -51,8 +47,8 @@ pub mod cd {
         };
 
         match path {
-            None => on_no_path_given(),
             Some(path) => on_path_given(path),
+            None => on_no_path_given(),
         }
     }
 }
