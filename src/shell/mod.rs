@@ -70,7 +70,7 @@ impl Shell {
 
     fn change_directory(&self, path: String) {
         if let Err(e) = cd::cmd(
-            &self.home_dir,
+            self.home_dir.as_ref(),
             if path.is_empty() { None } else { Some(path) },
         ) {
             error_msg("cd", &e.to_string());
